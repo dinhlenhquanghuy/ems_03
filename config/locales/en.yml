@@ -9,6 +9,7 @@ en:
   no_exam: Exam doesn't exist
   no_trainee_exam: Trainee exam doesn't exist
   create_subject_successful: Create subject successful
+  create_trainee_exam_failed: Create trainee exam failed
   create_user_successful: Create user successful
   create_user_failed: Failed to create user
   create_question_successful: Create question successful
@@ -208,6 +209,7 @@ en:
       confirmation: Confirmation
       role: Role
       save_changes: Save changes
+      title: Edit
   views:
     pagination:
       first: "&laquo; First"

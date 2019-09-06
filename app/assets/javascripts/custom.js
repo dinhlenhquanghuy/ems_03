@@ -52,7 +52,7 @@ var countdown = function() {
     until: $('#remaining_time').val(), //thời gian đếm
     format: 'HMS', //định dạng thời gian
     onExpiry: function() {
-      $('#new_trainee_exam').submit();
+      $('.edit_trainee_exam').submit();
     }
   });
 }

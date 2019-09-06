@@ -1,14 +1,16 @@
 class TraineeExamsController < ApplicationController
   before_action :load_exam_new, :signed_in_user, only: %i(new do_exam)
   before_action :load_trainee_exam_new, only: :do_exam
-  before_action :load_exam_create, only: :create
+  before_action :load_exam_create, :load_trainee_exam_create, only: :create
   before_action :supervisor_user, only: %i(edit update)
   before_action :load_trainee_exam, only: %i(edit show update)
   before_action :check_score, :check_pass, only: :update
 
   def index; end
 
-  def submit
+  def create
+    @trainee_exam.complete_time = Time.now.to_i -
+      @trainee_exam.created_at.to_i
     if @trainee_exam.update trainee_exam_params
       flash[:success] = t "submit_trainee_exam_successful"
       redirect_to root_url
@@ -18,7 +20,7 @@ class TraineeExamsController < ApplicationController
     end
   end
 
-  def create
+  def new
     @trainee_exam = current_user.trainee_exams.build exam_id: params[:exam_id]
     if @trainee_exam.save
       flash.now[:success] = t "submit_trainee_exam_successful"
@@ -27,7 +29,7 @@ class TraineeExamsController < ApplicationController
     else
       flash.now[:danger] = t "submit_trainee_exam_failed"
       render :new
-    end
+    end 
   end
 
   def edit; end
@@ -67,12 +69,19 @@ class TraineeExamsController < ApplicationController
   def load_trainee_exam_new
     @trainee_exam = TraineeExam.trainee_exam_result params[:trainee_exam_id]
     return if @trainee_exam
-    flash[:danger] = t ".no_exam"
+    flash[:danger] = t ".no_trainee_exam"
+    redirect_to root_path
+  end
+
+  def load_trainee_exam_create
+    @trainee_exam = TraineeExam.trainee_exam_result params[:trainee_exam][:id]
+    return if @trainee_exam
+    flash[:danger] = t ".no_trainee_exam"
     redirect_to root_path
   end
 
   def load_exam_create
-    @exam = Exam.load_questions_answers params[:trainee_exam][:exam_id]
+    @exam = Exam.load_detail params[:trainee_exam][:exam_id]
     return if @exam
     flash[:danger] = t "no_exam"
     redirect_to root_path
